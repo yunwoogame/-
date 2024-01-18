@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Platformer</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const player = {
+            x: 50,
+            y: canvas.height - 50,
+            width: 30,
+            height: 30,
+            color: "#3498db",
+            speed: 5,
+            isJumping: false,
+            jumpHeight: 100,
+        };
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function update() {
+            if (player.isJumping) {
+                player.y -= player.jumpHeight / 10;
+                if (player.y <= canvas.height - 2 * player.jumpHeight) {
+                    player.isJumping = false;
+                }
+            } else if (player.y < canvas.height - player.height) {
+                player.y += player.jumpHeight / 10;
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "Space" && !player.isJumping) {
+                player.isJumping = true;
+            }
+        });
+
+        gameLoop();
+    </script>
+</body>
+</html>
